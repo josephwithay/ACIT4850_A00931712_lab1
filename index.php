@@ -56,7 +56,7 @@ class Game {
 //                If the board variable exists but if there's no value given
 //                Assume the user is trying to start a new game. So fill the
 //                variable with '---------'
-                $this->board;
+                $this->board = '---------';
             } else {
 //                If else ('board' variable exists and contains characters)
 //                Trim any excess whitespaces and convert any upper case characters
@@ -189,7 +189,7 @@ class Game {
         $this->newposition = $this->position;  // copy the original
         $this->newposition[$which] = 'o';              // this would be their move
         $move = implode($this->newposition);      // make a string from the board array 
-        $link = '/?board=' . $move;               // this is what we want the link to be
+        $link = '?board=' . $move;               // this is what we want the link to be
         // so return a cell containing an anchor and showing a hyphen
         return '<td><a href=”' . $link . '”>-</a></td>';
     }
