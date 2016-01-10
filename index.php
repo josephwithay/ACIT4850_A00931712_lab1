@@ -25,7 +25,6 @@ and open the template in the editor.
  * ***************************************************************************
  * This Game class consists all the methods/fundtions for this Tic Tac Toe to
  * work.
- * 
  *      Functions List:
  *          1. __construct()
  *          2. rules()
@@ -33,7 +32,6 @@ and open the template in the editor.
  *          4. show_cell()
  *          5. winner()
  *          6. pick_move()
- *          7. message()
  * ***************************************************************************
  */
 
@@ -123,7 +121,7 @@ class Game {
             echo '<strong>Instructions:</strong>';
             echo '<br/>';
             echo 'Click on the dash to mark your character on the block you\'ve chosen.';
-            $restart =  false;
+            $restart = false;
         } else if ($this->winner('x')) {
             //  if the Winner is X, disable the game and compute a message to the user
             $this->display(false);
@@ -263,6 +261,18 @@ class Game {
 
     function pick_move() {
         
+    }
+
+    function possible_moves($token) {
+        for ($row = 0; $row < 3; $row++) {
+            for ($col = 0; $col < 3; $col++) {
+                if ($this->board[$row][$col] == $this->blank_token) {
+                    $this->board[$row][$col] = $token;
+                    $possible_moves[possible_moves_length] = new possible_move(row, collumn, token, this . board);
+                    $winning_token = $this->winner();
+                }
+            }
+        }
     }
 
 }
