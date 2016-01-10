@@ -115,6 +115,72 @@ class Game {
 
     /*
      * ******************************************************************
+     *  List of alerts made into one function so that the 'rules()' function can call
+     *  rather than rules() function having many lines of echos
+     * ******************************************************************
+     */
+
+    function alert_user($alert) {
+        $restart = true;    //  Restart button is initially enabled.
+        switch ($alert) {
+            case 'invalid-values':
+                echo 'Invalid Value found. The game cannot be proceeded.';
+                echo '<br/>';
+                echo 'Characters allowed: <b>X</b>, <b>O</b>, or <b>- (dash)</b>';
+                echo '<br/>';
+                break;
+            case 'short-variable':
+                echo 'The Board variable is too short. Please check if you have exactly 9 characters.';
+                echo '<br/>';
+                echo 'There are currently' . strlen($this->board) . ' characters entered.';
+                echo '<br/>';
+                echo 'Please restart the game by clicking at the refresh button below.';
+                echo '<br/>';
+                break;
+            case 'long-variable':
+                echo 'The Board variable is too long. Please check if you have exactly 9 characters.';
+                echo '<br/>';
+                echo 'There are currently' . strlen($this->board) . ' characters entered.';
+                echo '<br/>';
+                echo 'Please restart the game by clicking at the refresh button below.';
+                echo '<br/>';
+                break;
+            case 'start-game':
+                echo 'The game have been started. I will wish you good luck!';
+                echo '<br/>';
+                echo '<strong>Instructions:</strong>';
+                echo '<br/>';
+                echo 'Click on the dash to mark your character on the block you\'ve chosen.';
+                $restart = false;
+                break;
+            case 'winner-x':
+                echo 'You have defeated me! Congratulations!!';
+                echo '<br/>';
+                echo 'Would you like to restart the game?';
+                echo '<br/>';
+                break;
+            case 'winner-o':
+                echo 'You have been defeated, loser!!';
+                echo '<br/>';
+                echo 'I will defeat you again. Please restart the game.';
+                echo '<br/>';
+                break;
+            case 'tied':
+                echo 'You\'ve tried to beat me but unfortunately this game is a <strong>tie</strong>';
+                echo '<br/>';
+                echo 'I will give you another chance to beat me.';
+                break;
+            default:
+                echo 'Unreachable statement that you have reached.';
+                break;
+        }
+        if ($restart) {
+            echo '<br /><br /><a href="' . $_SERVER['PHP_SELF'] . '" style="-webkit-appearance: button; -moz-appearance: button; appearance: button;   background: #6b6b6b;  font-family: Arial;  color: #ffffff;  font-size: 14px;  padding: 5px 15px 5px 15px;  text-decoration: none;">Restart Game!</a>';
+        }
+    }
+
+    /*
+     * ******************************************************************
      *  Display the Board for the Game
      * ******************************************************************
      */
@@ -234,71 +300,6 @@ class Game {
             if ($this->position[$block] == '-') {
                 $this->position[$block] = 'x';
             }
-        }
-    }
-
-    /*
-     * ******************************************************************
-     *  The logic behind the tic tac toe AI
-     * ******************************************************************
-     */
-
-    function alert_user($alert) {
-        $restart = true;    //  Restart button is initially enabled.
-        switch ($alert) {
-            case 'invalid-values':
-                echo 'Invalid Value found. The game cannot be proceeded.';
-                echo '<br/>';
-                echo 'Characters allowed: <b>X</b>, <b>O</b>, or <b>- (dash)</b>';
-                echo '<br/>';
-                break;
-            case 'short-variable':
-                echo 'The Board variable is too short. Please check if you have exactly 9 characters.';
-                echo '<br/>';
-                echo 'There are currently' . strlen($this->board) . ' characters entered.';
-                echo '<br/>';
-                echo 'Please restart the game by clicking at the refresh button below.';
-                echo '<br/>';
-                break;
-            case 'long-variable':
-                echo 'The Board variable is too long. Please check if you have exactly 9 characters.';
-                echo '<br/>';
-                echo 'There are currently' . strlen($this->board) . ' characters entered.';
-                echo '<br/>';
-                echo 'Please restart the game by clicking at the refresh button below.';
-                echo '<br/>';
-                break;
-            case 'start-game':
-                echo 'The game have been started. I will wish you good luck!';
-                echo '<br/>';
-                echo '<strong>Instructions:</strong>';
-                echo '<br/>';
-                echo 'Click on the dash to mark your character on the block you\'ve chosen.';
-                $restart = false;
-                break;
-            case 'winner-x':
-                echo 'You have defeated me! Congratulations!!';
-                echo '<br/>';
-                echo 'Would you like to restart the game?';
-                echo '<br/>';
-                break;
-            case 'winner-o':
-                echo 'You have been defeated, loser!!';
-                echo '<br/>';
-                echo 'I will defeat you again. Please restart the game.';
-                echo '<br/>';
-                break;
-            case 'tied':
-                echo 'You\'ve tried to beat me but unfortunately this game is a <strong>tie</strong>';
-                echo '<br/>';
-                echo 'I will give you another chance to beat me.';
-                break;
-            default:
-                echo 'Unreachable statement that you have reached.';
-                break;
-        }
-        if ($restart) {
-            echo '<br /><br /><a href="' . $_SERVER['PHP_SELF'] . '" style="-webkit-appearance: button; -moz-appearance: button; appearance: button;   background: #6b6b6b;  font-family: Arial;  color: #ffffff;  font-size: 14px;  padding: 5px 15px 5px 15px;  text-decoration: none;">Restart Game!</a>';
         }
     }
 
