@@ -110,7 +110,14 @@ class Game {
             $this->alert_user('tied');
         } else {
             $this->pick_move();
-            $this->display(true);
+            if ($this->winner('o')) {
+                //If CPU wins disable the board and congratualate him.
+                $this->display(false);
+                $this->alert_user('winner-o');
+            } else {
+                // User continues to play.
+                $this->display(true);
+            }
         }
     }
 
@@ -314,7 +321,7 @@ class Game {
                 //  No one seems to have any advantage over this game.
                 //  place the character on a random cell.
                 $board = implode($this->position);
-                $place  = 4; //  Our AI is smart enough to take the center cell as soon as possible.
+                $place = 4; //  Our AI is smart enough to take the center cell as soon as possible.
                 // This would not stop unless CPU selects a random cell.
                 while (substr($board, $place, 1) != '-') {
                     // Generate a random number
