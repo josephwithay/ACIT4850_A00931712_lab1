@@ -110,7 +110,7 @@ class Game {
             $this->alert_user('tied');
         } else {
             $this->pick_move();
-            $this->winner('o');
+            $this->display(true);
         }
     }
 
@@ -193,6 +193,9 @@ class Game {
             //  To show or not to show the cells
             if ($show) {
                 echo $this->show_cell($pos);
+            } else {
+                // If there's a winner, disable the links.
+                echo '<td style = "padding: 1.5em;">' . $this->position[$pos] . '</td>';
             }
             if ($pos % 3 == 2) {
                 echo '</tr><tr>'; // start a new row for the next square
@@ -248,7 +251,7 @@ class Game {
 //            This was done for debugging purposes.
             }
             if ($won) {
-                return $won;
+                return true;
             }
         }
         /*
@@ -268,7 +271,7 @@ class Game {
 //            This was done for debugging purposes.
             }
             if ($won) {
-                return $won;
+                return true;
             }
         }
         /*
@@ -285,7 +288,7 @@ class Game {
                 ($this->position[6] == $token)) {
             $won = true;
         }
-        return $won;
+        return false;
     }
 
     /*
@@ -295,16 +298,127 @@ class Game {
      */
 
     function pick_move() {
-        //  Interates through the board
-        for ($block = 0; $block < 8; $block++) {
-            //  if there's a block with a - put an X
-            if ($this->position[$block] == '-') {
-                $this->position[$block] = 'o';
-                $this->display(true);
-                break;
+        //  Check if CPU won
+        $cpu = $this->possible_moves('o');
+        //  If CPU thinks it's a winning spot place the character on there.
+        if ($cpu != -1) {
+            $this->position[$cpu] = 'o';
+        } else {
+            //  Else...inspect if the user can win
+            $user = $this->possible_moves('x');
+            //  However if there is some change for the user to win.
+            //  Don't make that happen.
+            if ($user != -1) {
+                $this->position[$user] = 'o';
+            } else {
+                //  No one seems to have any advantage over this game.
+                //  place the character on a random cell.
+                $board = implode($this->position);
+                $place  = 4; //  Our AI is smart enough to take the center cell as soon as possible.
+                // This would not stop unless CPU selects a random cell.
+                while (substr($board, $place, 1) != '-') {
+                    // Generate a random number
+                    $place = rand(0, 8);
+                }
+                // When CPU chooses a random cell, replace '- 'with 'o'
+                $new_board = substr_replace($board, 'o', $place, 1);
+
+                // Regenerate the array to display where the AI moved.
+                $this->position = str_split($new_board);
             }
-            $this->winner('o');
         }
+    }
+
+    /*
+     * ******************************************************************
+     *  Checking for CPU movement
+     *  Note: Similar to Winner() function.
+     * ******************************************************************
+     */
+
+    function possible_moves($token) {
+        /*
+         * ---------------------------------------
+         *  Horizontal checking for CPU
+         * ---------------------------------------
+         */
+        for ($row = 0; $row < 3; $row++) {
+            $value = 0;         // Similar to board variable but it is temporary.
+            $cell_loc = 0;      // cell location.
+            // Iterate through the column
+            for ($col = 0; $col < 3; $col++) {
+                if ($this->position[3 * $row + $col] != $token) {
+                    $cell_loc = 3 * $row + $col;
+                } else {
+                    // It contains a character. Add a point to it
+                    $value++;
+                }
+            }
+            // If the row is 2/3 full
+            if ($value == 2) {
+                // Check if that cell is empty.
+                if ($this->position[$cell_loc] == '-') {
+                    // That cell is empty.  Take it for the win or block!
+                    return $cell_loc;
+                }
+            }
+        }
+        /*
+         * ---------------------------------------
+         *  Vertical checking for CPU
+         * ---------------------------------------
+         */
+        //  Same as above but orders changed.
+        for ($col = 0; $col < 3; $col++) {
+            $value = 0;         // Similar to board variable but it is temporary.
+            $cell_loc = 0;      // cell location.
+            // Iterate through the column
+            for ($row = 0; $row < 3; $row++) {
+                if ($this->position[3 * $row + $col] != $token) {
+                    $cell_loc = 3 * $row + $col;
+                } else {
+                    // It contains a character. Add a point to it
+                    $value++;
+                }
+            }
+            // If the row is 2/3 full
+            if ($value == 2) {
+                // Check if that cell is empty.
+                if ($this->position[$cell_loc] == '-') {
+                    // That cell is empty.  Take it for the win or block!
+                    return $cell_loc;
+                }
+            }
+        }
+        /*
+         * ---------------------------------------
+         *  Diagonal checking for CPU
+         * ---------------------------------------
+         */
+        $diag_win = [[0, 4, 8], [2, 4, 6]];   //  Winning cell location for diagonal
+        //  Iterate through each diagonal coordinates or cells
+        foreach ($diag_win as $crd) {
+            $value = 0;         // Similar to board variable but it is temporary.
+            $cell_loc = 0;      // cell location.
+            // Check each coordinates
+            foreach ($crd as $pos) {
+                if ($this->position[$pos] != $token) {
+                    $cell_loc = $pos;
+                } else {
+                    $value++;
+                }
+            }
+            // If that line contains two tokens out of three...
+            if ($value == 2) {
+                // Check if the potential win cell is empty
+                if ($this->position[$cell_loc] == '-') {
+                    // That cell is empty.  Take it for the win or block.
+                    return $cell_loc;
+                }
+            }
+        }
+        //  Checking is done found there's no moves left.
+        return -1;
     }
 
 }
