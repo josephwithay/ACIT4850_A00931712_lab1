@@ -110,6 +110,7 @@ class Game {
             $this->alert_user('tied');
         } else {
             $this->pick_move();
+            $this->winner('o');
         }
     }
 
@@ -186,7 +187,7 @@ class Game {
      */
 
     function display($show) {
-        echo '<table cols=”3” style=”fontsize:large; fontweight:bold”>';
+        echo '<table border="1" cols=”3” style=”fontsize:large; fontweight:bold;”>';
         echo '<tr>'; // open the first row
         for ($pos = 0; $pos < 9; $pos++) {
             //  To show or not to show the cells
@@ -211,15 +212,15 @@ class Game {
         $token = $this->position[$which];
         // deal with the easy case
         if ($token <> '-') {
-            return '<td>' . $token . '</td>';
+            return '<td style = "padding:1.5em;">' . $token . '</td>';
         }
         // now the hard case
         $this->newposition = $this->position;  // copy the original
-        $this->newposition[$which] = 'o';      // this would be their move
+        $this->newposition[$which] = 'x';      // this would be their move
         $move = implode($this->newposition);   // make a string from the board array 
         $link = '?board=' . $move;             // this is what we want the link to be
-        // so return a cell containing an anchor and showing a hyphen
-        return '<td><a href=' . $link . '>-</a></td>';
+        // so return a cell containing an anchor and showing a hyphen and also make the table bigger with the padding
+        return '<td><a href = ' . $link . ' style = "text-decoration: none; text-align: center; ;"><div style = "padding: 1.5em;">-</div></a></td>';
     }
 
     /*
@@ -298,8 +299,11 @@ class Game {
         for ($block = 0; $block < 8; $block++) {
             //  if there's a block with a - put an X
             if ($this->position[$block] == '-') {
-                $this->position[$block] = 'x';
+                $this->position[$block] = 'o';
+                $this->display(true);
+                break;
             }
+            $this->winner('o');
         }
     }
 
